@@ -1,0 +1,73 @@
+// filepath: Views/Drugs/Delete.cshtml
+@model mediCenter.Models.Drug
+@{
+    ViewData["Title"] = "Delete Drug";
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Deactivate Drug
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning!</strong> Are you sure you want to deactivate this drug? This will make it
+                    unavailable for new prescriptions.
+                </div>
+
+                <dl class="row">
+                    <dt class="col-sm-4">Name:</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">Manufacturer:</dt>
+                    <dd class="col-sm-8">@Model.Manufacturer</dd>
+
+                    <dt class="col-sm-4">Category:</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.Category))
+                        {
+                            <span class="badge bg-info">@Model.Category</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not specified</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Price:</dt>
+                    <dd class="col-sm-8"><strong class="text-success">$@Model.Price.ToString("F2")</strong></dd>
+
+                    <dt class="col-sm-4">Stock:</dt>
+                    <dd class="col-sm-8">@Model.StockQuantity units</dd>
+
+                    <dt class="col-sm-4">Expiry Date:</dt>
+                    <dd class="col-sm-8">@Model.ExpiryDate.ToString("MMMM dd, yyyy")</dd>
+                </dl>
+
+                @if (Model.Prescriptions.Any())
+                {
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        This drug has @Model.Prescriptions.Count() associated prescription(s). Deactivating will not affect
+                        existing prescriptions.
+                    </div>
+                }
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger me-2"
+                        onclick="return confirm('Are you sure you want to deactivate this drug?')">
+                        <i class="fas fa-ban me-2"></i>Yes, Deactivate Drug
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

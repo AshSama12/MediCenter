@@ -1,0 +1,198 @@
+@model mediCenter.Models.Prescription
+@{
+    ViewData["Title"] = "New Prescription";
+}
+
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">
+                    <i class="fas fa-prescription me-2"></i>Create New Prescription
+                </h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="PatientId" class="form-label">
+                                    <i class="fas fa-user-injured me-1"></i>Patient <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="PatientId" class="form-select" asp-items="ViewBag.PatientId">
+                                    <option value="">Select Patient</option>
+                                </select>
+                                <span asp-validation-for="PatientId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="DrugId" class="form-label">
+                                    <i class="fas fa-pills me-1"></i>Drug <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="DrugId" class="form-select" asp-items="ViewBag.DrugId" id="drugSelect">
+                                    <option value="">Select Drug</option>
+                                </select>
+                                <span asp-validation-for="DrugId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="DoctorId" class="form-label">
+                                    <i class="fas fa-user-md me-1"></i>Doctor <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="DoctorId" class="form-select" asp-items="ViewBag.DoctorId">
+                                    <option value="">Select Doctor</option>
+                                </select>
+                                <span asp-validation-for="DoctorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Dosage" class="form-label">
+                                    <i class="fas fa-prescription-bottle me-1"></i>Dosage <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Dosage" class="form-control" placeholder="e.g., 2 tablets daily" />
+                                <span asp-validation-for="Dosage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Quantity" class="form-label">
+                                    <i class="fas fa-boxes me-1"></i>Quantity (Packs) <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Quantity" class="form-control" type="number" placeholder="0" id="quantityInput" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Calculation Display -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Pack Price:</small><br>
+                                        <strong id="packPrice">LKR 0.00</strong>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Quantity:</small><br>
+                                        <strong id="quantityDisplay">0 Pack(s)</strong>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Total Amount:</small><br>
+                                        <strong class="text-success" id="totalAmount">LKR 0.00</strong>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted">Pack Type:</small><br>
+                                        <strong id="packType">-</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Instructions" class="form-label">
+                            <i class="fas fa-list me-1"></i>Instructions <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="Instructions" class="form-control" rows="3" placeholder="Enter detailed instructions for the patient"></textarea>
+                        <span asp-validation-for="Instructions" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="PrescribedDate" class="form-label">
+                                    <i class="fas fa-calendar me-1"></i>Prescribed Date <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="PrescribedDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="PrescribedDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="StartDate" class="form-label">
+                                    <i class="fas fa-play me-1"></i>Start Date (Optional)
+                                </label>
+                                <input asp-for="StartDate" class="form-control" type="date" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="EndDate" class="form-label">
+                                    <i class="fas fa-stop me-1"></i>End Date (Optional)
+                                </label>
+                                <input asp-for="EndDate" class="form-control" type="date" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Notes" class="form-label">
+                            <i class="fas fa-sticky-note me-1"></i>Additional Notes
+                        </label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Any additional notes or observations"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-warning me-2">
+                            <i class="fas fa-save me-2"></i>Create Prescription
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Drug data for calculation
+        const drugs = @Html.Raw(Json.Serialize(ViewBag.DrugData ?? new List<object>()));
+        
+        function updateTotalCalculation() {
+            const drugId = document.getElementById('drugSelect').value;
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 0;
+            
+            if (drugId && quantity > 0) {
+                const drug = drugs.find(d => d.id == drugId);
+                if (drug) {
+                    const packPrice = drug.packPrice;
+                    const totalAmount = packPrice * quantity;
+                    
+                    document.getElementById('packPrice').textContent = `LKR ${packPrice.toFixed(2)}`;
+                    document.getElementById('quantityDisplay').textContent = `${quantity} ${drug.packType}(s)`;
+                    document.getElementById('totalAmount').textContent = `LKR ${totalAmount.toFixed(2)}`;
+                    document.getElementById('packType').textContent = drug.packType;
+                }
+            } else {
+                document.getElementById('packPrice').textContent = 'LKR 0.00';
+                document.getElementById('quantityDisplay').textContent = '0 Pack(s)';
+                document.getElementById('totalAmount').textContent = 'LKR 0.00';
+                document.getElementById('packType').textContent = '-';
+            }
+        }
+        
+        document.getElementById('drugSelect').addEventListener('change', updateTotalCalculation);
+        document.getElementById('quantityInput').addEventListener('input', updateTotalCalculation);
+        
+        // Auto-fill today's date for prescribed date
+        document.addEventListener('DOMContentLoaded', function() {
+            const prescribedDateInput = document.getElementById('PrescribedDate');
+            if (!prescribedDateInput.value) {
+                prescribedDateInput.value = new Date().toISOString().split('T')[0];
+            }
+        });
+    </script>
+}

@@ -1,0 +1,131 @@
+@model IEnumerable<mediCenter.Models.Drug>
+@{
+    ViewData["Title"] = "Drugs";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-pills me-2 text-success"></i>Drug Inventory
+    </h2>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="fas fa-plus me-2"></i>Add New Drug
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-pills me-2"></i>Drug Name</th>
+                            <th><i class="fas fa-industry me-2"></i>Manufacturer</th>
+                            <th><i class="fas fa-tag me-2"></i>Category</th>
+                            <th><i class="fas fa-dollar-sign me-2"></i>Price</th>
+                            <th><i class="fas fa-boxes me-2"></i>Stock</th>
+                            <th><i class="fas fa-calendar me-2"></i>Expiry</th>
+                            <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var drug in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>@drug.Name</strong>
+                                        @if (!string.IsNullOrEmpty(drug.Description))
+                                        {
+                                            <br>
+                                
+                                            <small class="text-muted">@(drug.Description.Length > 50 ?
+                                                                                    drug.Description.Substring(0, 50) + "..." : drug.Description)</small>
+                                                                }
+                                    </div>
+                                </td>
+                                <td>@drug.Manufacturer</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(drug.Category))
+                                    {
+                                        <span class="badge bg-info">@drug.Category</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </td>
+                                <td>
+                                    <strong class="text-success">$@drug.Price.ToString("F2")</strong>
+                                </td>
+                                <td>
+                                    @if (drug.StockQuantity <= 10)
+                                    {
+                                        <span class="badge bg-danger">@drug.StockQuantity</span>
+                                    
+
+                                        <small class="text-danger">Low Stock</small>
+                                    }
+                                    else if (drug.StockQuantity <= 50)
+                                    {
+                                        <span class="badge bg-warning">@drug.StockQuantity</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">@drug.StockQuantity</span>
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        var daysToExpiry = (drug.ExpiryDate - DateTime.Now).Days;
+                                    }
+                                    @drug.ExpiryDate.ToString("MMM dd, yyyy")
+                                    @if (daysToExpiry <= 30)
+                                    {
+                                        <br>
+                            
+                                        <small class="text-danger">Expires soon!</small>
+                                    }
+                                    else if (daysToExpiry <= 90)
+                                    {
+                                        <br>
+                            
+                                        <small class="text-warning">@daysToExpiry days left</small>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@drug.Id" class="btn btn-sm btn-outline-info"
+                                            title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@drug.Id" class="btn btn-sm btn-outline-warning"
+                                            title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@drug.Id" class="btn btn-sm btn-outline-danger"
+                                            title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-pills display-1 text-muted mb-3"></i>
+                <h4 class="text-muted">No Drugs Found</h4>
+                <p class="text-muted">Get started by adding your first drug to the inventory.</p>
+                <a asp-action="Create" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>Add First Drug
+                </a>
+            </div>
+        }
+    </div>
+</div>

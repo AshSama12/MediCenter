@@ -1,0 +1,237 @@
+@model mediCenter.Models.Prescription
+@{
+    ViewData["Title"] = "Prescription Details";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">
+                    <i class="fas fa-prescription me-2"></i>Prescription Details
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Patient Information -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="text-primary border-bottom pb-2">
+                            <i class="fas fa-user-injured me-2"></i>Patient Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Name:</dt>
+                                    <dd class="col-sm-8">@Model.Patient.FirstName @Model.Patient.LastName</dd>
+                                    <dt class="col-sm-4">Phone:</dt>
+                                    <dd class="col-sm-8">@Model.Patient.PhoneNumber</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Age:</dt>
+                                    <dd class="col-sm-8">@((DateTime.Now - Model.Patient.BirthDate).Days / 365) years</dd>
+                                    <dt class="col-sm-4">Blood Type:</dt>
+                                    <dd class="col-sm-8">
+                                        @if (!string.IsNullOrEmpty(Model.Patient.BloodType))
+                                        {
+                                            <span class="badge bg-danger">@Model.Patient.BloodType</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not specified</span>
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drug Information -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="text-success border-bottom pb-2">
+                            <i class="fas fa-pills me-2"></i>Drug Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Name:</dt>
+                                    <dd class="col-sm-8">@Model.Drug.Name</dd>
+                                    <dt class="col-sm-4">Manufacturer:</dt>
+                                    <dd class="col-sm-8">@Model.Drug.Manufacturer</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Category:</dt>
+                                    <dd class="col-sm-8">
+                                        @if (!string.IsNullOrEmpty(Model.Drug.Category))
+                                        {
+                                            <span class="badge bg-info">@Model.Drug.Category</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not specified</span>
+                                        }
+                                    </dd>
+                                    <dt class="col-sm-4">Price:</dt>
+                                    <dd class="col-sm-8"><strong class="text-success">$@Model.Drug.Price.ToString("F2")</strong></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prescription Details -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="text-warning border-bottom pb-2">
+                            <i class="fas fa-prescription-bottle me-2"></i>Prescription Details
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Dosage:</dt>
+                                    <dd class="col-sm-8"><span class="badge bg-primary">@Model.Dosage</span></dd>
+                                    <dt class="col-sm-4">Quantity:</dt>
+                                    <dd class="col-sm-8">@Model.Quantity</dd>
+                                    <dt class="col-sm-4">Prescribed Date:</dt>
+                                    <dd class="col-sm-8">@Model.PrescribedDate.ToString("MMMM dd, yyyy")</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Start Date:</dt>
+                                    <dd class="col-sm-8">@(Model.StartDate?.ToString("MMMM dd, yyyy") ?? "Not specified")</dd>
+                                    <dt class="col-sm-4">End Date:</dt>
+                                    <dd class="col-sm-8">@(Model.EndDate?.ToString("MMMM dd, yyyy") ?? "Not specified")</dd>
+                                    <dt class="col-sm-4">Status:</dt>
+                                    <dd class="col-sm-8">
+                                        @if (Model.IsCompleted)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Completed
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @if (Model.EndDate.HasValue && Model.EndDate.Value < DateTime.Now)
+                                            {
+                                                <span class="badge bg-warning">
+                                                    <i class="fas fa-clock me-1"></i>Expired
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-play me-1"></i>Active
+                                                </span>
+                                            }
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions and Notes -->
+                @if (!string.IsNullOrEmpty(Model.Instructions))
+                {
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h6><i class="fas fa-list me-1"></i>Instructions:</h6>
+                            <div class="alert alert-info">
+                                @Model.Instructions
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h6><i class="fas fa-sticky-note me-1"></i>Additional Notes:</h6>
+                            <div class="alert alert-secondary">
+                                @Model.Notes
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </a>
+                    @if (!Model.IsCompleted)
+                    {
+                        <button class="btn btn-success me-2" onclick="markCompleted(@Model.Id)">
+                            <i class="fas fa-check me-2"></i>Mark Completed
+                        </button>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Doctor Information -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-md me-2"></i>Prescribed By
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div class="avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                        <i class="fas fa-user-md fa-2x"></i>
+                    </div>
+                    <h6>Dr. @Model.Doctor.Username</h6>
+                    <small class="text-muted">@Model.Doctor.Role</small>
+                </div>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <small class="text-muted">Prescription Created</small>
+                    <br>
+                    <strong>@Model.CreatedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")</strong>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Patient.Allergies))
+        {
+            <div class="card mt-3">
+                <div class="card-header bg-danger text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Patient Allergies
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger mb-0">
+                        @Model.Patient.Allergies
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function markCompleted(id) {
+            if (confirm('Mark this prescription as completed?')) {
+                // You can implement this functionality via AJAX or a separate action
+                window.location.href = '/Prescriptions/MarkCompleted/' + id;
+            }
+        }
+    </script>
+}

@@ -1,0 +1,211 @@
+@model mediCenter.Models.Drug
+@{
+    ViewData["Title"] = "Drug Details";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-pills me-2"></i>@Model.Name
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                <i class="fas fa-pills me-1"></i>Name:
+                            </dt>
+                            <dd class="col-sm-8">@Model.Name</dd>
+
+                            <dt class="col-sm-4">
+                                <i class="fas fa-industry me-1"></i>Manufacturer:
+                            </dt>
+                            <dd class="col-sm-8">@Model.Manufacturer</dd>
+
+                            <dt class="col-sm-4">
+                                <i class="fas fa-tag me-1"></i>Category:
+                            </dt>
+                            <dd class="col-sm-8">
+                                @if (!string.IsNullOrEmpty(Model.Category))
+                                {
+                                    <span class="badge bg-info">@Model.Category</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Not specified</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                <i class="fas fa-prescription-bottle me-1"></i>Dosage:
+                            </dt>
+                            <dd class="col-sm-8">@(Model.Dosage ?? "Not specified")</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">
+                                <i class="fas fa-money-bill me-1"></i>Unit Price:
+                            </dt>
+                            <dd class="col-sm-7">
+                                <strong class="text-success">LKR @Model.UnitPrice.ToString("N2")</strong>
+                            </dd>
+
+                            <dt class="col-sm-5">
+                                <i class="fas fa-box me-1"></i>Pack Details:
+                            </dt>
+                            <dd class="col-sm-7">
+                                @Model.UnitsPerPack @Model.PackType
+                            </dd>
+
+                            <dt class="col-sm-5">
+                                <i class="fas fa-calculator me-1"></i>Pack Price:
+                            </dt>
+                            <dd class="col-sm-7">
+                                <strong class="text-primary">LKR @Model.PackPrice.ToString("N2")</strong>
+                            </dd>
+
+                            <dt class="col-sm-5">
+                                <i class="fas fa-boxes me-1"></i>Stock:
+                            </dt>
+                            <dd class="col-sm-7">
+                                @if (Model.StockQuantity <= 10)
+                                {
+                                    <span class="badge bg-danger">@Model.StockQuantity - Low Stock</span>
+                                }
+                                else if (Model.StockQuantity <= 50)
+                                {
+                                    <span class="badge bg-warning">@Model.StockQuantity</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@Model.StockQuantity</span>
+                                }
+                                <small class="text-muted">@Model.PackType</small>
+                            </dd>
+
+                            <dt class="col-sm-5">
+                                <i class="fas fa-calendar me-1"></i>Expiry Date:
+                            </dt>
+                            <dd class="col-sm-7">
+                                @{
+                                    var daysToExpiry = (Model.ExpiryDate - DateTime.Now).Days;
+                                }
+                                @Model.ExpiryDate.ToString("MMMM dd, yyyy")
+                                @if (daysToExpiry <= 30)
+                                {
+                                    <br><small class="text-danger">Expires in @daysToExpiry days!</small>
+                                }
+                                else if (daysToExpiry <= 90)
+                                {
+                                    <br><small class="text-warning">@daysToExpiry days remaining</small>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-5">
+                                <i class="fas fa-toggle-on me-1"></i>Status:
+                            </dt>
+                            <dd class="col-sm-7">
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactive</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6><i class="fas fa-info-circle me-1"></i>Description:</h6>
+                            <p class="text-muted">@Model.Description</p>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.SideEffects))
+                {
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6><i class="fas fa-exclamation-triangle me-1"></i>Side Effects:</h6>
+                            <div class="alert alert-warning">
+                                @Model.SideEffects
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-prescription me-2"></i>Prescriptions (@Model.Prescriptions.Count())
+                </h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Prescriptions.Any())
+                {
+                    @foreach (var prescription in Model.Prescriptions.OrderByDescending(p => p.PrescribedDate).Take(5))
+                    {
+                        <div class="card mb-2">
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1">@prescription.Patient.FirstName @prescription.Patient.LastName</h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>@prescription.PrescribedDate.ToString("MMM dd, yyyy")
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="fas fa-pills me-1"></i>@prescription.Dosage
+                                </small>
+                                <br>
+                                <small class="text-success">
+                                    <i class="fas fa-money-bill me-1"></i>LKR @prescription.TotalAmount.ToString("N2")
+                                </small>
+                                @if (prescription.IsCompleted)
+                                {
+                                    <span class="badge bg-success ms-2">Completed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning ms-2">Active</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @if (Model.Prescriptions.Count() > 5)
+                    {
+                        <small class="text-muted">And @(Model.Prescriptions.Count() - 5) more...</small>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted text-center">
+                        <i class="fas fa-prescription display-4 mb-2"></i><br>
+                        No prescriptions yet
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
