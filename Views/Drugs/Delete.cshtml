@@ -38,8 +38,12 @@
                         }
                     </dd>
 
-                    <dt class="col-sm-4">Price:</dt>
-                    <dd class="col-sm-8"><strong class="text-success">$@Model.Price.ToString("F2")</strong></dd>
+                    <dt class="col-sm-4">Pack Price:</dt>
+                    <dd class="col-sm-8"><strong class="text-success">LKR @Model.PackPrice.ToString("N2")</strong>
+                    </dd>
+
+                    <dt class="col-sm-4">Unit Price:</dt>
+                    <dd class="col-sm-8">LKR @Model.UnitPrice.ToString("N2")</dd>
 
                     <dt class="col-sm-4">Stock:</dt>
                     <dd class="col-sm-8">@Model.StockQuantity units</dd>

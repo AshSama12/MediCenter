@@ -36,7 +36,7 @@ namespace mediCenter.Data
 
             // Configure decimal precision for drug prices
             modelBuilder.Entity<Drug>()
-                .Property(d => d.Price)
+                .Property(d => d.UnitPrice)
                 .HasPrecision(18, 2);
         }
     }

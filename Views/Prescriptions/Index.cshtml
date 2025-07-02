@@ -12,6 +12,14 @@
     </a>
 </div>
 
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="searchPhone" class="form-control" placeholder="Search by patient phone number..."
+            value="@(Context.Request.Query["searchPhone"])" />
+        <button class="btn btn-warning" type="submit"><i class="fas fa-search"></i> Search</button>
+    </div>
+</form>
+
 <div class="card">
     <div class="card-body">
         @if (Model.Any())
@@ -35,7 +43,8 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <div class="avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
                                             @prescription.Patient.FirstName.First()@prescription.Patient.LastName.First()
                                         </div>
                                         <div>
@@ -57,15 +66,20 @@
                                     <span class="badge bg-primary">@prescription.Dosage</span>
                                     @if (prescription.Quantity > 0)
                                     {
-                                        <br><small class="text-muted">Qty: @prescription.Quantity</small>
+                                        <br>
+                            
+                                        <small class="text-muted">Qty: @prescription.Quantity</small>
                                     }
                                 </td>
                                 <td>
                                     @prescription.PrescribedDate.ToString("MMM dd, yyyy")
                                     @if (prescription.StartDate.HasValue && prescription.EndDate.HasValue)
                                     {
-                                        <br><small class="text-muted">
-                                            @prescription.StartDate.Value.ToString("MMM dd") - @prescription.EndDate.Value.ToString("MMM dd")
+                                        <br>
+                            
+                                        <small class="text-muted">
+                                            @prescription.StartDate.Value.ToString("MMM dd") -
+                                            @prescription.EndDate.Value.ToString("MMM dd")
                                         </small>
                                     }
                                 </td>
@@ -94,15 +108,18 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Details" asp-route-id="@prescription.Id" class="btn btn-sm btn-outline-info" title="View Details">
+                                        <a asp-action="Details" asp-route-id="@prescription.Id"
+                                            class="btn btn-sm btn-outline-info" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@prescription.Id" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <a asp-action="Edit" asp-route-id="@prescription.Id"
+                                            class="btn btn-sm btn-outline-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         @if (!prescription.IsCompleted)
                                         {
-                                            <button class="btn btn-sm btn-outline-success" onclick="markCompleted(@prescription.Id)" title="Mark Completed">
+                                            <button class="btn btn-sm btn-outline-success" onclick="markCompleted(@prescription.Id)"
+                                                title="Mark Completed">
                                                 <i class="fas fa-check"></i>
                                             </button>
                                         }

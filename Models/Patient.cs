@@ -19,12 +19,12 @@ namespace mediCenter.Models
         [Phone]
         public string PhoneNumber { get; set; }
 
-        // Made optional - no [Required] attribute
-        public string Email { get; set; }
-        public string Address { get; set; }
-        public string Gender { get; set; }
-        public string BloodType { get; set; }
-        public string Allergies { get; set; }
+        // Explicitly marked as optional with nullable reference types
+        public string? Email { get; set; }
+        public string? Address { get; set; }
+        public string? Gender { get; set; }
+        public string? BloodType { get; set; }
+        public string? Allergies { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

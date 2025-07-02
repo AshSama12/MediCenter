@@ -76,8 +76,12 @@
                                             <span class="text-muted">Not specified</span>
                                         }
                                     </dd>
-                                    <dt class="col-sm-4">Price:</dt>
-                                    <dd class="col-sm-8"><strong class="text-success">$@Model.Drug.Price.ToString("F2")</strong></dd>
+                                    <dt class="col-sm-4">Unit Price:</dt>
+<dd class="col-sm-8"><strong class="text-success">LKR @Model.Drug.UnitPrice.ToString("N2")</strong></dd>
+
+<dt class="col-sm-4">Pack Price:</dt>
+<dd class="col-sm-8"><strong class="text-success">LKR @Model.Drug.PackPrice.ToString("N2")</strong></dd>
+          
                                 </dl>
                             </div>
                         </div>

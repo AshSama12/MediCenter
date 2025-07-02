@@ -12,6 +12,14 @@
     </a>
 </div>
 
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="searchName" class="form-control" placeholder="Search by drug name..."
+            value="@(Context.Request.Query["searchName"])" />
+        <button class="btn btn-success" type="submit"><i class="fas fa-search"></i> Search</button>
+    </div>
+</form>
+
 <div class="card">
     <div class="card-body">
         @if (Model.Any())
@@ -39,10 +47,10 @@
                                         @if (!string.IsNullOrEmpty(drug.Description))
                                         {
                                             <br>
-                                
+
                                             <small class="text-muted">@(drug.Description.Length > 50 ?
                                                                                     drug.Description.Substring(0, 50) + "..." : drug.Description)</small>
-                                                                }
+                                        }
                                     </div>
                                 </td>
                                 <td>@drug.Manufacturer</td>
@@ -57,13 +65,15 @@
                                     }
                                 </td>
                                 <td>
-                                    <strong class="text-success">$@drug.Price.ToString("F2")</strong>
+                                    <strong class="text-success">LKR @drug.PackPrice.ToString("N2")</strong>
+                                    <br><small class="text-muted">@drug.UnitsPerPack @drug.PackType LKR
+                                        @drug.UnitPrice.ToString("N2")</small>
                                 </td>
                                 <td>
                                     @if (drug.StockQuantity <= 10)
                                     {
                                         <span class="badge bg-danger">@drug.StockQuantity</span>
-                                    
+
 
                                         <small class="text-danger">Low Stock</small>
                                     }
@@ -84,13 +94,13 @@
                                     @if (daysToExpiry <= 30)
                                     {
                                         <br>
-                            
+
                                         <small class="text-danger">Expires soon!</small>
                                     }
                                     else if (daysToExpiry <= 90)
                                     {
                                         <br>
-                            
+
                                         <small class="text-warning">@daysToExpiry days left</small>
                                     }
                                 </td>

@@ -47,31 +47,25 @@
                     </div>
                     <div class="col-md-6">
                         <dl class="row">
-                            <dt class="col-sm-5">
+                            <dt class="col-sm-4">
                                 <i class="fas fa-money-bill me-1"></i>Unit Price:
                             </dt>
-                            <dd class="col-sm-7">
+                            <dd class="col-sm-8">
                                 <strong class="text-success">LKR @Model.UnitPrice.ToString("N2")</strong>
                             </dd>
 
-                            <dt class="col-sm-5">
-                                <i class="fas fa-box me-1"></i>Pack Details:
-                            </dt>
-                            <dd class="col-sm-7">
-                                @Model.UnitsPerPack @Model.PackType
-                            </dd>
-
-                            <dt class="col-sm-5">
+                            <dt class="col-sm-4">
                                 <i class="fas fa-calculator me-1"></i>Pack Price:
                             </dt>
-                            <dd class="col-sm-7">
-                                <strong class="text-primary">LKR @Model.PackPrice.ToString("N2")</strong>
+                            <dd class="col-sm-8">
+                                <strong class="text-success">LKR @Model.PackPrice.ToString("N2")</strong>
+                                <br><small class="text-muted">(@Model.UnitsPerPack @Model.PackType)</small>
                             </dd>
 
-                            <dt class="col-sm-5">
+                            <dt class="col-sm-4">
                                 <i class="fas fa-boxes me-1"></i>Stock:
                             </dt>
-                            <dd class="col-sm-7">
+                            <dd class="col-sm-8">
                                 @if (Model.StockQuantity <= 10)
                                 {
                                     <span class="badge bg-danger">@Model.StockQuantity - Low Stock</span>
@@ -84,31 +78,34 @@
                                 {
                                     <span class="badge bg-success">@Model.StockQuantity</span>
                                 }
-                                <small class="text-muted">@Model.PackType</small>
                             </dd>
 
-                            <dt class="col-sm-5">
+                            <dt class="col-sm-4">
                                 <i class="fas fa-calendar me-1"></i>Expiry Date:
                             </dt>
-                            <dd class="col-sm-7">
+                            <dd class="col-sm-8">
                                 @{
                                     var daysToExpiry = (Model.ExpiryDate - DateTime.Now).Days;
                                 }
                                 @Model.ExpiryDate.ToString("MMMM dd, yyyy")
                                 @if (daysToExpiry <= 30)
                                 {
-                                    <br><small class="text-danger">Expires in @daysToExpiry days!</small>
+                                    <br>
+                                
+                                    <small class="text-danger">Expires in @daysToExpiry days!</small>
                                 }
                                 else if (daysToExpiry <= 90)
                                 {
-                                    <br><small class="text-warning">@daysToExpiry days remaining</small>
+                                    <br>
+                                
+                                    <small class="text-warning">@daysToExpiry days remaining</small>
                                 }
                             </dd>
 
-                            <dt class="col-sm-5">
+                            <dt class="col-sm-4">
                                 <i class="fas fa-toggle-on me-1"></i>Status:
                             </dt>
-                            <dd class="col-sm-7">
+                            <dd class="col-sm-8">
                                 @if (Model.IsActive)
                                 {
                                     <span class="badge bg-success">Active</span>
@@ -155,7 +152,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4">
         <div class="card">
             <div class="card-header bg-primary text-white">
@@ -177,10 +174,6 @@
                                 <br>
                                 <small class="text-muted">
                                     <i class="fas fa-pills me-1"></i>@prescription.Dosage
-                                </small>
-                                <br>
-                                <small class="text-success">
-                                    <i class="fas fa-money-bill me-1"></i>LKR @prescription.TotalAmount.ToString("N2")
                                 </small>
                                 @if (prescription.IsCompleted)
                                 {

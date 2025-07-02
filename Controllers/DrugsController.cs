@@ -15,13 +15,17 @@ namespace mediCenter.Controllers
         }
 
         // GET: Drugs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchName)
         {
-            var drugs = await _context.Drugs
-                .Where(d => d.IsActive)
-                .OrderBy(d => d.Name)
-                .ToListAsync();
-            return View(drugs);
+            var drugs = from d in _context.Drugs
+                        select d;
+
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                drugs = drugs.Where(d => d.Name.Contains(searchName));
+            }
+
+            return View(await drugs.ToListAsync());
         }
 
         // GET: Drugs/Details/5
@@ -48,7 +52,7 @@ namespace mediCenter.Controllers
         // POST: Drugs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Manufacturer,Category,Price,StockQuantity,Dosage,SideEffects,ExpiryDate")] Drug drug)
+        public async Task<IActionResult> Create([Bind("Name,Description,Manufacturer,Category,UnitPrice,UnitsPerPack,PackType,StockQuantity,Dosage,SideEffects,ExpiryDate")] Drug drug)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +80,7 @@ namespace mediCenter.Controllers
         // POST: Drugs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Manufacturer,Category,Price,StockQuantity,Dosage,SideEffects,ExpiryDate,CreatedAt,IsActive")] Drug drug)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Manufacturer,Category,UnitPrice,UnitsPerPack,PackType,StockQuantity,Dosage,SideEffects,ExpiryDate,CreatedAt,IsActive")] Drug drug)
         {
             if (id != drug.Id) return NotFound();
 

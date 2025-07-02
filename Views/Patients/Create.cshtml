@@ -14,7 +14,7 @@
             <div class="card-body">
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
@@ -40,7 +40,8 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label asp-for="BirthDate" class="form-label">
-                                    <i class="fas fa-birthday-cake me-1"></i>Birth Date <span class="text-danger">*</span>
+                                    <i class="fas fa-birthday-cake me-1"></i>Birth Date <span
+                                        class="text-danger">*</span>
                                 </label>
                                 <input asp-for="BirthDate" class="form-control" type="date" />
                                 <span asp-validation-for="BirthDate" class="text-danger"></span>
@@ -76,7 +77,8 @@
                                 <label asp-for="Email" class="form-label">
                                     <i class="fas fa-envelope me-1"></i>Email (Optional)
                                 </label>
-                                <input asp-for="Email" class="form-control" type="email" placeholder="Enter email address" />
+                                <input asp-for="Email" class="form-control" type="email"
+                                    placeholder="Enter email address" />
                             </div>
                         </div>
                     </div>
@@ -85,7 +87,8 @@
                         <label asp-for="Address" class="form-label">
                             <i class="fas fa-map-marker-alt me-1"></i>Address (Optional)
                         </label>
-                        <textarea asp-for="Address" class="form-control" rows="2" placeholder="Enter full address"></textarea>
+                        <textarea asp-for="Address" class="form-control" rows="2"
+                            placeholder="Enter full address"></textarea>
                     </div>
 
                     <div class="row">
@@ -112,7 +115,8 @@
                                 <label asp-for="Allergies" class="form-label">
                                     <i class="fas fa-exclamation-triangle me-1"></i>Allergies (Optional)
                                 </label>
-                                <textarea asp-for="Allergies" class="form-control" rows="2" placeholder="List any known allergies"></textarea>
+                                <textarea asp-for="Allergies" class="form-control" rows="2"
+                                    placeholder="List any known allergies"></textarea>
                             </div>
                         </div>
                     </div>
@@ -132,5 +136,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -12,6 +12,14 @@
     </a>
 </div>
 
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="searchPhone" class="form-control" placeholder="Search by phone number..."
+            value="@(Context.Request.Query["searchPhone"])" />
+        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+    </div>
+</form>
+
 <div class="card">
     <div class="card-body">
         @if (Model.Any())
@@ -35,21 +43,25 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                            style="width: 40px; height: 40px;">
                                             @patient.FirstName.First()@patient.LastName.First()
                                         </div>
                                         <div>
                                             <strong>@patient.FirstName @patient.LastName</strong>
                                             @if (!string.IsNullOrEmpty(patient.Gender))
                                             {
-                                                <br><small class="text-muted">@patient.Gender</small>
+                                                <br>
+                                    
+                                                <small class="text-muted">@patient.Gender</small>
                                             }
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     @patient.BirthDate.ToString("MMM dd, yyyy")
-                                    <br><small class="text-muted">Age: @((DateTime.Now - patient.BirthDate).Days / 365) years</small>
+                                    <br><small class="text-muted">Age: @((DateTime.Now - patient.BirthDate).Days / 365)
+                                        years</small>
                                 </td>
                                 <td>@patient.PhoneNumber</td>
                                 <td>@(patient.Email ?? "N/A")</td>
@@ -68,13 +80,16 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-info" title="View Details">
+                                        <a asp-action="Details" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-info"
+                                            title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-warning"
+                                            title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a asp-action="Delete" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <a asp-action="Delete" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-danger"
+                                            title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>

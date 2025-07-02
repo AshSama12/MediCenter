@@ -9,12 +9,12 @@ namespace mediCenter.Models
         [Required]
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; } // Optional
 
         [Required]
         public string Manufacturer { get; set; }
 
-        public string Category { get; set; }
+        public string? Category { get; set; } // Optional
 
         [Required]
         [Display(Name = "Unit Price (LKR)")]
@@ -29,9 +29,9 @@ namespace mediCenter.Models
 
         public int StockQuantity { get; set; }
 
-        public string Dosage { get; set; }
+        public string? Dosage { get; set; } // Optional
 
-        public string SideEffects { get; set; }
+        public string? SideEffects { get; set; } // Optional
 
         public DateTime ExpiryDate { get; set; }
 

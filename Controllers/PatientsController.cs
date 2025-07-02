@@ -15,13 +15,17 @@ namespace mediCenter.Controllers
         }
 
         // GET: Patients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchPhone)
         {
-            var patients = await _context.Patients
-                .Include(p => p.Prescriptions)
-                .OrderBy(p => p.LastName)
-                .ToListAsync();
-            return View(patients);
+            var patients = from p in _context.Patients.Include(p => p.Prescriptions)
+                           select p;
+
+            if (!string.IsNullOrEmpty(searchPhone))
+            {
+                patients = patients.Where(p => p.PhoneNumber.Contains(searchPhone));
+            }
+
+            return View(await patients.OrderBy(p => p.LastName).ToListAsync());
         }
 
         // GET: Patients/Details/5
@@ -54,13 +58,39 @@ namespace mediCenter.Controllers
         {
             if (ModelState.IsValid)
             {
-                patient.CreatedAt = DateTime.UtcNow;
-                patient.UpdatedAt = DateTime.UtcNow;
-                _context.Add(patient);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "Patient created successfully!";
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    patient.CreatedAt = DateTime.UtcNow;
+                    patient.UpdatedAt = DateTime.UtcNow;
+                    _context.Add(patient);
+
+                    // Check if context is saving
+                    var result = await _context.SaveChangesAsync();
+                    Console.WriteLine($"Rows affected: {result}");
+
+                    TempData["Success"] = "Patient created successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving patient: {ex.Message}");
+                    TempData["Error"] = $"Error saving patient: {ex.Message}";
+                }
             }
+
+            // Debug: Log validation errors
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine($"Validation Error: {error.ErrorMessage}");
+                }
+
+                // Add validation errors to TempData for display
+                var errors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                TempData["Error"] = $"Validation errors: {errors}";
+            }
+
             return View(patient);
         }
 
@@ -127,6 +157,20 @@ namespace mediCenter.Controllers
                 TempData["Success"] = "Patient deleted successfully!";
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        // Add this to PatientsController for testing
+        public async Task<IActionResult> TestDb()
+        {
+            try
+            {
+                var count = await _context.Patients.CountAsync();
+                return Content($"Database connected. Patient count: {count}");
+            }
+            catch (Exception ex)
+            {
+                return Content($"Database error: {ex.Message}");
+            }
         }
 
         private bool PatientExists(int id)

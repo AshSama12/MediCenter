@@ -16,15 +16,21 @@ namespace mediCenter.Controllers
         }
 
         // GET: Prescriptions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchPhone)
         {
-            var prescriptions = await _context.Prescriptions
+            var prescriptions = _context.Prescriptions
                 .Include(p => p.Patient)
                 .Include(p => p.Drug)
                 .Include(p => p.Doctor)
                 .OrderByDescending(p => p.PrescribedDate)
-                .ToListAsync();
-            return View(prescriptions);
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchPhone))
+            {
+                prescriptions = prescriptions.Where(p => p.Patient.PhoneNumber.Contains(searchPhone));
+            }
+
+            return View(await prescriptions.ToListAsync());
         }
 
         // GET: Prescriptions/Details/5
