@@ -1,4 +1,4 @@
-# MediCenter..
+# MediCenter.
 
 MediCenter is a Razor Pages web application designed to streamline operations for medical centers. It provides robust tools to manage drugs inventory, patients, users, and prescriptions, with integrated user authentication and role-based access.
 
