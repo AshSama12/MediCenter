@@ -50,13 +50,19 @@ namespace mediCenter.Controllers
         }
 
         // Add this method to improve the display in dropdowns
+        private async Task<int> GetDefaultDoctorIdAsync()
+        {
+            var defaultDoctor = await _context.Users.FirstOrDefaultAsync(u => u.Role == "Doctor");
+            return defaultDoctor?.Id ?? 1; // Return 1 if no doctor found (you should have at least one doctor)
+        }
+
         private void PopulateDropdowns(Prescription prescription = null)
         {
             ViewData["PatientId"] = new SelectList(
                 _context.Patients.Select(p => new
                 {
                     Id = p.Id,
-                    FullName = p.FirstName + " " + p.LastName
+                    FullName = p.FirstName + " " + p.LastName + " (" + p.PhoneNumber + ")"
                 }),
                 "Id",
                 "FullName",
@@ -80,35 +86,39 @@ namespace mediCenter.Controllers
                 packPrice = d.PackPrice,
                 packType = d.PackType
             }).ToList();
-
-            ViewData["DoctorId"] = new SelectList(
-                _context.Users.Where(u => u.Role == "Doctor").Select(u => new
-                {
-                    Id = u.Id,
-                    DoctorName = "Dr. " + u.Username
-                }),
-                "Id",
-                "DoctorName",
-                prescription?.DoctorId
-            );
         }
 
         // GET: Prescriptions/Create
-        public IActionResult Create()
+        public IActionResult Create(int? patientId)
         {
             PopulateDropdowns();
-            return View();
+
+            var prescription = new Prescription();
+            if (patientId.HasValue)
+            {
+                prescription.PatientId = patientId.Value;
+                ViewBag.PatientName = _context.Patients
+                    .Where(p => p.Id == patientId.Value)
+                    .Select(p => p.FirstName + " " + p.LastName)
+                    .FirstOrDefault();
+            }
+
+            return View(prescription);
         }
 
         // POST: Prescriptions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PatientId,DrugId,DoctorId,Dosage,Instructions,PrescribedDate,StartDate,EndDate,Quantity,Notes")] Prescription prescription)
+        public async Task<IActionResult> Create([Bind("PatientId,DrugId,Dosage,Instructions,Quantity,Notes")] Prescription prescription)
         {
             if (ModelState.IsValid)
             {
+                // Auto-assign doctor and dates
+                prescription.DoctorId = await GetDefaultDoctorIdAsync();
+                prescription.PrescribedDate = DateTime.UtcNow;
                 prescription.CreatedAt = DateTime.UtcNow;
                 prescription.IsCompleted = false;
+
                 _context.Add(prescription);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Prescription created successfully!";
@@ -133,7 +143,7 @@ namespace mediCenter.Controllers
         // POST: Prescriptions/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PatientId,DrugId,DoctorId,Dosage,Instructions,PrescribedDate,StartDate,EndDate,Quantity,Notes,IsCompleted,CreatedAt")] Prescription prescription)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PatientId,DrugId,Dosage,Instructions,Quantity,Notes,IsCompleted,DoctorId,PrescribedDate,CreatedAt")] Prescription prescription)
         {
             if (id != prescription.Id) return NotFound();
 

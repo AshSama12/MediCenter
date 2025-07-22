@@ -52,7 +52,7 @@
                                             @if (!string.IsNullOrEmpty(patient.Gender))
                                             {
                                                 <br>
-                                    
+
                                                 <small class="text-muted">@patient.Gender</small>
                                             }
                                         </div>
@@ -87,6 +87,10 @@
                                         <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-warning"
                                             title="Edit">
                                             <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-controller="Prescriptions" asp-action="Create" asp-route-patientId="@patient.Id"
+                                            class="btn btn-sm btn-outline-success" title="Add Prescription">
+                                            <i class="fas fa-prescription"></i>
                                         </a>
                                         <a asp-action="Delete" asp-route-id="@patient.Id" class="btn btn-sm btn-outline-danger"
                                             title="Delete">

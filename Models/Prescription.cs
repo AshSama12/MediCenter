@@ -22,7 +22,6 @@ namespace mediCenter.Models
         [Required]
         public string Instructions { get; set; }
 
-        [Required]
         public DateTime PrescribedDate { get; set; }
 
         public DateTime? StartDate { get; set; }
