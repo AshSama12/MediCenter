@@ -19,3 +19,4 @@ MediCenter is a Razor Pages web application designed to streamline operations fo
 - **UI**: Razor Pages + Bootstrap (optional)
 
 ## 📸 Screenshots
+<img width="1918" height="905" alt="image" src="https://github.com/user-attachments/assets/4f73d7c2-2faf-4d7a-8bd9-e5af606d4a90" />
